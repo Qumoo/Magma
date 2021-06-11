@@ -4,6 +4,7 @@ package org.bukkit.plugin.java;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.InvalidPluginException;
@@ -88,6 +91,19 @@ public final class PluginClassLoader extends URLClassLoader {
             throw new InvalidPluginException("No public constructor", ex);
         } catch (InstantiationException ex) {
             throw new InvalidPluginException("Abnormal plugin type", ex);
+        }
+        if (parent instanceof LaunchClassLoader) {
+            System.out.println("parent is a LaunchClassLoader");
+            System.out.println(parent);
+            try {
+                Method methode = parent.getClass().getDeclaredMethod("addChild", ClassLoader.class);
+                methode.invoke(parent, this);
+                System.out.println("added child");
+            } catch(Exception ignored) {
+                System.out.println("Couldnt add child");
+            }
+        } else {
+            System.out.println("Parent isnt a LaunchClassLoader");
         }
     }
 
