@@ -211,9 +211,17 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
             case ENDER_CHEST:
                 return true;
         }
-        if (material.getMaterialType() == Material.MaterialType.MOD_ITEM) {
+        //Also added SYSO's for "better" debugging
+        //Added MOD_BLOCK as test seems to work with Mr.Crayfish vehicle mod
+        if (material.getMaterialType() == Material.MaterialType.MOD_BLOCK || material.getMaterialType() == Material.MaterialType.MOD_ITEM) {
+            System.out.println("is applic");
             return true;
         }
+        //Added this check to test with my test stone-button - NBT gets applied now for the stone button
+        if(type == Material.STONE_BUTTON) {
+            return true;
+        }
+        System.out.println("isnt applic");
         return false;
     }
 
